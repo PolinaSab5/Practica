@@ -1,5 +1,7 @@
 package com.example.driodquest;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -53,17 +55,21 @@ public class MainActivity extends AppCompatActivity {
         boolean answerIsTrue =
                 mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageResId = 0;
+        if (mIsDeceiter) {
+            messageResId = R.string.judgment_toast;
+        } else {
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
         } else {
             messageResId = R.string.incorrect_toast;
-        }
+        }}
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 private Button mTrueButton;
 private Button mFalseButton;
 private ImageButton mNextButton;
 private ImageButton mBackButton;
+private Button mDeceitButton;
 private TextView mQuestonTextView;
     private Queston[] mQuestionBank = new Queston[] {
             new Queston(R.string.question_android, true),
@@ -78,27 +84,30 @@ private TextView mQuestonTextView;
             new Queston(R.string.question_pp, false),
     };
     private int mCurrentIndex = 0;
+    private boolean mIsDeceiter;
 
-
+    private static final int REQUEST_CODE_DECEIT = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         Log.d(TAG, "onCreate(Bundle) вызван");
         setContentView(R.layout.activity_main);
-        mQuestonTextView =
-                (TextView)findViewById(R.id.question_text_view);
-
-
+        mQuestonTextView = (TextView)findViewById(R.id.question_text_view);
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 checkAnswer(false);
 
             }
+            
+
         });
+
+
         mFalseButton = (Button) findViewById(R.id.false_button);
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,8 +120,10 @@ private TextView mQuestonTextView;
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                mIsDeceiter = false;
                 updateQuestion();
             }
+
 
         });
         updateQuestion();
@@ -124,11 +135,36 @@ private TextView mQuestonTextView;
                 updateQuestion();
             }
         });
+        mDeceitButton = (Button)findViewById(R.id.deceit_button);
+        mDeceitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+// Запуск DeceitActivity
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex]
+                        .isAnswerTrue();
+                Intent i = DeceitActivity.newIntent(MainActivity.this,
+                        answerIsTrue);
+                startActivityForResult(i, REQUEST_CODE_DECEIT);
+            }
+        });
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
         }
         updateQuestion();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_CODE_DECEIT) {
+            if (data == null) {
+                return;
+            }mIsDeceiter = DeceitActivity.wasAnswerShown(data);
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);

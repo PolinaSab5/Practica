@@ -24,6 +24,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
             <Button
+                android:id="@+id/deceit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/deceit_button" />
+            <Button
                 android:id="@+id/true_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Вперед"
                 android:src="@drawable/arrow_right" />
-
         </LinearLayout>
 
     </LinearLayout>

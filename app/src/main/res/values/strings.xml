@@ -17,6 +17,12 @@
     <string name="question_tt">Serializable - это стандартный Java-интерфейс.</string>
     <string name="question_ff">Контейнеры, как следует из названия, удерживают вместе объекты и виджеты, в зависимости от того, какие конкретные элементы необходимы и в каком конкретном расположении.</string>
     <string name="question_pp">ANR — это сокращение от «Приложение не отвечает».</string>
+    <string name="warning_text">Вы уверены, что хотите это делать?</string>
+    <string name="show_answer_button">Показать ответ</string>
+    <string name="deceit_button">Обмануть !</string>
+    <string name="judgment_toast">Обманывать нельзя.</string>
+
+    <string name="title_activity_deceit">Обманывать нельзя, но вам разрешаю.</string>
 
 
 </resources>
